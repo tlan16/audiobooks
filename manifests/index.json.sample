@@ -1,0 +1,10 @@
+{
+  "sections": [{
+      "name": "Fiction",
+      "books": [{
+        "id": "lorem-ipsum",
+        "source_dir": "/path/to/library/Audiobooks/Lorem/Ipsum"
+      }]
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{% macro human_duration(duration) -%}
+  {% set hours=duration//3600 %}
+  {% set minutes=duration//60 - (hours*60) %}
+  {% set seconds=duration%60%}
+  {% if hours > 0%}
+    {{ hours|int }}h
+  {% endif %}
+  {{ minutes|int }}m {{ seconds|int }}s
+{%- endmacro %}
+
+{% macro chaptered_durations(book) -%}
+{# Yes there's a trailing comma, I'll remove it in JS. Easier this way #}
+{% for p in book.getParts() %}{% for c in p.getChapters() %}{{c.getDuration()}},{% endfor %}{% endfor %}
+{%- endmacro %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Books</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style media="screen">
+img.cover-image {
+  max-width: 120px;
+}
+span.time-listened {
+  font-weight: bold;
+}
+span.time-listened + span.time-listened-of {
+  display: none;
+}
+span.time-listened:not(:empty) + span.time-listened-of {
+  display: inline;
+}
+    </style>
+    <script src="js/app.js"></script>
+    <script>
+window.onload = function() {
+  let i = new Index();
+  i.init();
+}
+    </script>
+  </head>
+  <body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col text-white bg-dark">
+        <h1>Books</h1>
+      </div>
+    </div>
+    <div class="row">
+      <form class="col-4" class="filter">
+        <h2>Filter</h2>
+        <div class="form-group">
+          <input type="text" class="form-control" id="filter-text" placeholder="Filter term">
+        </div>
+        <div class="form-check mb-2">
+          <input type="checkbox" class="form-check-input" id="filter-hide-completed">
+          <label class="form-check-label" for="filter-hide-completed">Hide completed books</label>
+        </div>
+      </form>
+    </div>
+    {% for section in index.sections %}
+      {% if section.name %}
+      <div class="row">
+        <div class="col text-white bg-dark col-md-2">
+          <h2>{{ section.name }}</h2>
+        </div>
+        <div class="col text-white bg-dark col-md-2">
+          <p><strong>Author</strong></p>
+        </div>
+        <div class="col text-white bg-dark col-md-2">
+          <p><strong>Title</strong></p>
+        </div>
+        <div class="col text-white bg-dark col-md-3">
+          <p><strong>Duration</strong></p>
+        </div>
+        <div class="col text-white bg-dark col-md-2">
+          <p><strong>Actions</strong></p>
+        </div>
+        <div class="col text-white bg-dark col-md-1"></div>
+      </div>
+      {% endif %}
+      {% for book in section.books %}
+      <div class="book row border border-info" data-book-id="{{ book.getID() }}" data-chaptered-durations="{{ chaptered_durations(book) }}" data-total-duration="{{ book.getDuration() }}">
+        <div class="col-md-2">
+          <a href="{{ book.getID()|urlencode }}{{ extension }}"><img alt="Cover image for {{book.getTitle()|e}} by {{book.getAuthor()|e}}" class="img-fluid cover-image rounded" src="{{ media_path }}/{{ book.getID()|urlencode }}/cover.jpg" /></a>
+        </div>
+        <div class="col-md-2 author">
+          <p>{{ book.getAuthor() }}</p>
+        </div>
+        <div class="col-md-2 title">
+          <a href="{{ book.getID()|urlencode }}{{ extension }}"><p>{{ book.getTitle() }}</p></a>
+        </div>
+        <div class="col-md-3">
+          <p>
+            <span class="time-listened"></span><span class="time-listened-of"> of </span>
+            <strong class="duration">{{ human_duration(book.getDuration()) }}</strong>
+            <span class="time-listened-percentage"></span>
+          </p>
+        </div>
+        <div class="col-md-2">
+          <p>
+            <button class="btn btn-outline-info d-none" data-mark-complete="1" data-book-id="{{ book.getID() }}">Mark Complete</button>
+            <button class="btn btn-outline-info d-none" data-mark-complete="0" data-book-id="{{ book.getID() }}">Mark New</button>
+          </p>
+        </div>
+      </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+  </body>
+</html>

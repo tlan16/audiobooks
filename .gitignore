@@ -1,0 +1,5 @@
+__pycache__
+.virtualenv
+public/media/
+public/*.html
+manifests/*.json
