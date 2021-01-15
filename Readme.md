@@ -16,7 +16,7 @@ Here are a couple of screenshots:
 
 
 ### From the administrator's point of view
-This project will allow importing an existing audiobook library and, from that, create a static website which contains an index page and a page for each book. This can be hosted on any web serve which supports *Range* headers (most servers).
+This project will allow importing an existing audiobook library and, from that, create a static website which contains an index page and a page for each book. This can be hosted on any web server which supports *Range* headers (most servers).
 
 The static content (including media) can be hosted on a local nginx instance, or on something like Amazon S3.
 
@@ -29,7 +29,7 @@ I also aim for this to be usable by those who perhaps don't have the best eyesig
 
 As for the who can administer this, someone who is OK using python, configuring nginx and has a server somewhere to run this.
 
-[![asciicast](https://asciinema.org/a/ARpNQlIIZdxstZhrnp7K4Pcc5.svg)](https://asciinema.org/a/ARpNQlIIZdxstZhrnp7K4Pcc5)
+[![asciicast](https://asciinema.org/a/LBjHoZrzC6VTTzlEjaGwuLQoL.svg)](https://asciinema.org/a/LBjHoZrzC6VTTzlEjaGwuLQoL)
 
 ## Workflows
 ### Importing audiobooks
