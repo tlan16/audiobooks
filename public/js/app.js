@@ -5,6 +5,7 @@ function Index() {
     this.indicateBookProgress(books);
     this.initMarkCompleteButtons();
     this.initSearch();
+    this.initVisibilityFilters();
   }
 
   this.initMarkCompleteButtons = function() {
@@ -64,25 +65,77 @@ function Index() {
   }
 
   this.initSearch = function() {
-    document.querySelector('#filter-hide-completed').addEventListener('click', function(e) {
-      if (e.target.checked) {
-        document.querySelectorAll('div.book.alert-success').forEach(function(el) {el.classList.add('d-none')});
-      } else {
-        document.querySelectorAll('div.book.alert-success').forEach(function(el) {el.classList.remove('d-none')});
-      }
-    });
     document.querySelector('#filter-text').addEventListener('keyup', function(e) {
+      document.querySelector('[data-visibility="all"]').click();
       const searchString = e.target.value.toLocaleLowerCase();
       Array.from(document.querySelectorAll('div.book')).forEach(function(el){
         const author = el.querySelector('.author').textContent.trim().toLocaleLowerCase();
         const title  = el.querySelector('.title').textContent.trim().toLocaleLowerCase();
-        const toShow = author.indexOf(searchString) + title.indexOf(searchString) > -2
-        if (toShow) {
+        const match = author.indexOf(searchString) + title.indexOf(searchString) > -2
+        if (match) {
           el.classList.remove('d-none');
         } else {
           el.classList.add('d-none');
         }
+      });
+      self.hideEmptySections();
+    })
+  }
+
+  this.initVisibilityFilters = function() {
+    const visibilityFilterOptions = document.querySelectorAll('[data-visibility]');
+    const allTheBooksSelector     = 'div.book';
+    const newBooksSelector        = 'div.book.new';
+    const startedBooksSelector    = 'div.book.alert-info';
+    const storage                 = new Storage();
+    console.log(123);
+    const settings                = storage.loadSettings();
+
+    visibilityFilterOptions.forEach(function(el) {
+      el.addEventListener('click', function(e, i) {
+        e.preventDefault();
+
+        const selection = e.target.dataset.visibility;
+
+        visibilityFilterOptions.forEach(function(el) {
+          el.classList.remove('active');
+        });
+        e.target.classList.add('active');
+
+        let selector = allTheBooksSelector;
+        if (selection === 'started') {
+          selector = startedBooksSelector;
+        } else if (selection === 'new') {
+          selector = newBooksSelector;
+        }
+
+        document.querySelectorAll(allTheBooksSelector).forEach(function(el) {el.classList.add('d-none')});
+        document.querySelectorAll(selector).forEach(function(el) {el.classList.remove('d-none')});
+
+        self.hideEmptySections();
+        storage.saveSettings(settings.playbackRate, settings.hideFutureChapters, selection);
       })
+    })
+
+    // Set the saved visibility setting
+    if (settings.hasOwnProperty('visibility')) {
+      let options = document.querySelectorAll('[data-visibility]');
+      let x = Array.prototype.slice.call(options).find(function(v){return v.dataset.visibility===settings['visibility']});
+      if (x) { x.click(); }
+    }
+  }
+
+  // If all books in a section are hidden, hide the section
+  this.hideEmptySections = function() {
+    document.querySelectorAll('.section').forEach(function(s) {
+      let options = document.querySelectorAll('.book[data-section-name="'+s.dataset.sectionName+'"]');
+      if (Array.prototype.slice.call(options).every(function(b) {
+        return b.classList.contains('d-none');
+      })) {
+        s.classList.add('d-none');
+      } else {
+        s.classList.remove('d-none');
+      }
     })
   }
 }
@@ -227,7 +280,7 @@ function Player(book_id) {
       }
     });
 
-    storage.saveSettings(this.getPlaybackRate(), isHidden);
+    storage.saveSettings(this.getPlaybackRate(), isHidden, this.getVisibilitySetting());
   }
 
   // Get the hide-future-chapters setting, returns boolean
@@ -242,7 +295,7 @@ function Player(book_id) {
     // Determine the desired rate, based on the active button
     const rate = this.getPlaybackRate()
     player.playbackRate = Number(rate);
-    storage.saveSettings(rate, this.getHideFutureChapters());
+    storage.saveSettings(rate, this.getHideFutureChapters(), this.getVisibilitySetting());
   }
 
   // Get the playback-rate setting, returns float
@@ -250,6 +303,18 @@ function Player(book_id) {
     return Number(Array.prototype.slice.call(playbackRateOptions).find(function(node) {
           return node.classList.contains("active");
         }).dataset.playbackrate);
+  }
+
+  // Get the visibility setting, returns string
+  this.getVisibilitySetting = function() {
+    let x = document.querySelectorAll('[data-visibility]');
+    if (x.length === 0) {
+      return 'all';
+      // return storage.loadSettings().visibility;
+    }
+    return String(Array.prototype.slice.call(x).find(function(node) {
+          return node.classList.contains("active");
+        }).dataset.visibility);
   }
 
   // Move the audio element to specified fraction of playtime
@@ -363,10 +428,11 @@ function Storage() {
     return {"chapter": 0, "seek": 0, "completed": false};
   }
 
-  this.saveSettings = function(playbackRate, hideFutureChapters) {
+  this.saveSettings = function(playbackRate, hideFutureChapters, visibility) {
     obj = {
       playbackRate: Number(playbackRate),
-      hideFutureChapters: !!hideFutureChapters
+      hideFutureChapters: !!hideFutureChapters,
+      visibility: ['all', 'new', 'started'].indexOf(visibility) === -1 ? 'all' : visibility,
     }
     localStorage.setItem('settings', JSON.stringify(obj));
   }
@@ -377,7 +443,11 @@ function Storage() {
       return JSON.parse(settings);
     }
     // Or default settings
-    return {"playback-rate": 1, "hide-future-chapters": false};
+    return {
+      "playback-rate": 1,
+      "hide-future-chapters": false,
+      "visibility": "all"
+    };
   }
 }
 

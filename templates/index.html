@@ -49,20 +49,22 @@ window.onload = function() {
       </div>
     </div>
     <div class="row">
-      <form class="col-4" class="filter">
+      <form class="filter">
         <h2>Filter</h2>
         <div class="form-group">
           <input type="text" class="form-control" id="filter-text" placeholder="Filter term">
         </div>
-        <div class="form-check mb-2">
-          <input type="checkbox" class="form-check-input" id="filter-hide-completed">
-          <label class="form-check-label" for="filter-hide-completed">Hide completed books</label>
+        <h2>Visibility</h2>
+        <div class="btn-group" role="group">
+          <button class="btn btn-secondary active" data-visibility="all">Show All</button>
+          <button class="btn btn-secondary" data-visibility="new">Show new</button>
+          <button class="btn btn-secondary" data-visibility="started">Show started</button>
         </div>
       </form>
     </div>
     {% for section in index.sections %}
       {% if section.name %}
-      <div class="row">
+      <div class="row section" data-section-name="{{ section.name }}">
         <div class="col text-white bg-dark col-md-2">
           <h2>{{ section.name }}</h2>
         </div>
@@ -82,7 +84,7 @@ window.onload = function() {
       </div>
       {% endif %}
       {% for book in section.books %}
-      <div class="book row border border-info" data-book-id="{{ book.getID() }}" data-chaptered-durations="{{ chaptered_durations(book) }}" data-total-duration="{{ book.getDuration() }}">
+      <div class="book row border border-info" data-section-name="{{ section.name }}" data-book-id="{{ book.getID() }}" data-chaptered-durations="{{ chaptered_durations(book) }}" data-total-duration="{{ book.getDuration() }}">
         <div class="col-md-2">
           <a href="{{ book.getID()|urlencode }}{{ extension }}"><img alt="Cover image for {{book.getTitle()|e}} by {{book.getAuthor()|e}}" class="img-fluid cover-image rounded" src="{{ media_path }}/{{ book.getID()|urlencode }}/cover.jpg" /></a>
         </div>
