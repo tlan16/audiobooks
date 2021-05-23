@@ -55,6 +55,7 @@ function Index() {
           // May have been added by the MarkComplete buttons
           el.classList.remove('alert-info');
           el.classList.remove('alert-success');
+          el.classList.add('new');
           timeListened.textContent = '';
           timeListenedPercentage.textContent = '';
         }
