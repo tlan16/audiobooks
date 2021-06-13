@@ -73,9 +73,6 @@ def generate():
 
 	return
 
-def clean(base, files_to_keep):
-	pass
-
 env = Environment(
 	loader=FileSystemLoader('templates'),
 	autoescape=select_autoescape(['html'])
