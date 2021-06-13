@@ -32,8 +32,8 @@ for author in authors:
 		book_stub['title'] = title
 		book_stub['parts'][0]['chapter_names'] = [f'Chapter {n}' for n in range(1, chapter_count+1)]
 
-		s_author = ''.join(c for c in author if c.isalnum() or c == ' ')
-		s_title = ''.join(c for c in title if c.isalnum() or c == ' ')
+		s_author = ''.join(c for c in author if c.isalnum() or c in [' ','-'])
+		s_title = ''.join(c for c in title if c.isalnum() or c in [' ','-'])
 		stub_name = f'{s_author}-{s_title}'.lower().replace(' ', '-')
 		stub_name = re.sub(r'-+', '-', stub_name)
 
