@@ -2,7 +2,7 @@
 import sys
 from os import listdir
 from os.path import isdir, isfile, join
-import json
+import yaml
 import re
 import argparse
 
@@ -36,11 +36,11 @@ for author in authors:
 		stub_name = f'{s_author}-{s_title}'.lower().replace(' ', '-')
 		stub_name = re.sub(r'-+', '-', stub_name)
 
-		fn = f'manifests/{stub_name}.json'
+		fn = f'manifests/{stub_name}.yaml'
 		if isfile(fn):
 			if options.verbose:
 				print(f'Stub {fn} exists, skipping')
 		else:
 			print(f'Creating stub {fn}')
 			with open(fn, 'w') as f:
-				json.dump(book_stub, f, indent = 2)
+				yaml.dump(book_stub, f, indent = 2)

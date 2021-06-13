@@ -2,7 +2,7 @@ from mutagen.mp3 import MP3
 from os import listdir, makedirs
 from os.path import isfile, join
 from shutil import copyfile
-import json
+import yaml
 import ntpath
 
 class Book(object):
@@ -19,9 +19,9 @@ class Book(object):
 		self.initChapters()
 
 	def loadManifest(self):
-		manifest = join('manifests', '{}.json'.format(self.id))
+		manifest = join('manifests', '{}.yaml'.format(self.id))
 		with open(manifest, 'r') as f:
-			self.manifest = json.load(f)
+			self.manifest = yaml.load(f)
 			self.title = self.manifest['title']
 			self.author = self.manifest['author']
 

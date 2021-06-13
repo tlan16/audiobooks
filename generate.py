@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import sys
-import json
+import yaml
 import re
 import argparse
 from lib.book import Book
@@ -30,14 +30,13 @@ def generate_book(book: Book):
 
 def generate():
 	books = []
-	# Read the Index json
-	try:
-		with open('manifests/index.json', 'r') as f:
-			index = json.load(f)
-	except Exception as e:
-		print('Required file manifests/index.json missing or unreadable')
-		sys.exit(1)
-
+	# Read the Index yaml
+	with open('manifests/index.yaml', 'r') as f:
+		try:
+			index = yaml.safe_load(f)
+		except Exception as e:
+			print('Required file manifests/index.yaml missing or unreadable, ' + e)
+			sys.exit(1)
 
 	for section in index['sections']:
 		if not options.only_index:
