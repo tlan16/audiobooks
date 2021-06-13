@@ -9,6 +9,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('basedir', help='The base path of the audiobook library')
 parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help="Print skipped books")
+parser.add_argument('-f', '--filter', dest='filter', help="Import books matching filter only")
 options = parser.parse_args()
 
 basedir = options.basedir
@@ -41,6 +42,10 @@ for author in authors:
 			if options.verbose:
 				print(f'Stub {fn} exists, skipping')
 		else:
-			print(f'Creating stub {fn}')
-			with open(fn, 'w') as f:
-				yaml.dump(book_stub, f, indent = 2)
+			if options.filter is None or (options.filter in author or options.filter in title or options.filter in stub_name):
+				print(f'Creating stub {fn}')
+				with open(fn, 'w') as f:
+					yaml.dump(book_stub, f)
+			else:
+				if options.verbose:
+					print(f'Stub {fn} does not match filter {options.filter}, skipping')
