@@ -21,7 +21,7 @@ class Book(object):
 	def loadManifest(self):
 		manifest = join('manifests', '{}.yaml'.format(self.id))
 		with open(manifest, 'r') as f:
-			self.manifest = yaml.load(f)
+			self.manifest = yaml.safe_load(f)
 			self.title = self.manifest['title']
 			self.author = self.manifest['author']
 
