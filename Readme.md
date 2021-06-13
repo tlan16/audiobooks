@@ -36,8 +36,8 @@ As for the who can administer this, someone who is OK using python, configuring 
 TL/DR;
 1. Have library organised as `…/author/title/{chapter1,chapter2,…}.mp3`
 2. `./import.py /path/to/library`
-3. Edit `manifests/index.json`, to set which books to index, and in what order
-4. Optionally edit the `.json` manifest of newly imported books
+3. Edit `manifests/index.yaml`, to set which books to index, and in what order
+4. Optionally edit the `.yaml` manifest of newly imported books
 5. `./generate.py`
 6. Copy `public/` to web server
 7. You're done, browse to your server and enjoy
@@ -104,60 +104,47 @@ These files will now exist in `manifests/`:
 ```bash
 $ tree manifests/
 manifests/
-├── index.json.sample
-├── lewis-carroll-alice-in-wonderland.json
-└── rené-descartes-discourse-on-the-method-of-rightly-conducting-ones-reason-and-of-seeking-truth.json
+├── index.yaml.sample
+├── lewis-carroll-alice-in-wonderland.yaml
+└── rené-descartes-discourse-on-the-method-of-rightly-conducting-ones-reason-and-of-seeking-truth.yaml
 ```
 
 #### Deciding which books to list, and adding metadata
-Create `manifests/index.json` (see the sample file). This file determines which books are ultimately shown, in what sections, and in what order. Also, each of the books' JSON files can optionally be edited to contain chapter names, instead of generic "Chapter 1, Chapter 2" names.
+Create `manifests/index.yaml` (see the sample file). This file determines which books are ultimately shown, in what sections, and in what order. Also, each of the books' YAML files can optionally be edited to contain chapter names, instead of generic "Chapter 1, Chapter 2" names.
 
-Let's create 2 sections on our site; "Fiction", "Non-Fiction". Then let's add both books accordingly. Set `manifests/index.json` to:
-```json
-{
-  "sections": [{
-      "name": "Non-fiction",
-      "books": [{
-        "id": "rené-descartes-discourse-on-the-method-of-rightly-conducting-ones-reason-and-of-seeking-truth",
-        "source_dir": "/path/to/library/René Descartes/Discourse on the Method of Rightly Conducting One’s Reason and of Seeking Truth"
-      }]
-    },{
-      "name": "Fiction",
-      "books": [{
-        "id": "lewis-carroll-alice-in-wonderland",
-        "source_dir": "/path/to/library/Lewis Carroll/Alice in Wonderland"
-      }]
-    }
-  ]
-}
+Let's create 2 sections on our site; "Fiction", "Non-Fiction". Then let's add both books accordingly. Set `manifests/index.yaml` to:
+```yaml
+sections:
+- name: Non-fiction
+  books:
+  - id: "rené-descartes-discourse-on-the-method-of-rightly-conducting-ones-reason-and-of-seeking-truth"
+    source_dir: "/path/to/library/René Descartes/Discourse on the Method of Rightly Conducting One’s Reason and of Seeking Truth"
+- name: Fiction
+  books:
+  - id: "lewis-carroll-alice-in-wonderland"
+    source_dir: "/path/to/library/Lewis Carroll/Alice in Wonderland"
 ```
-For each book, the `id` refers to the `.json` file for that book (and will later map to a URL), the `source_dir` refers to where the audio and cover files are stored.
+For each book, the `id` refers to the `.yaml` file for that book (and will later map to a URL), the `source_dir` refers to where the audio and cover files are stored.
 
-Optionally, add chapter names to the books. Let's only do it for Alice in Wonderland for now. Open `manifests/lewis-carroll-alice-in-wonderland.json` and you'll see it has generic chapter names for now. Set the JSON to:
-```
-{
-  "title": "Alice in Wonderland",
-  "author": "Lewis Carroll",
-  "parts": [
-    {
-      "name": "",
-      "chapter_names": [
-        "Down the Rabbit-Hole",
-        "The Pool of Tears",
-        "A Caucus-Race and a long Tale",
-        "The Rabbit sends in a little Bill",
-        "Advice from a Caterpillar",
-        "Pig and Pepper",
-        "A Mad Tea-Party",
-        "The Queen’s Croquet-Ground",
-        "The Mock Turtle’s Story",
-        "The Lobster Quadrille",
-        "Who stole the Tarts?",
-        "Alice’s Evidence"
-      ]
-    }
-  ]
-}
+Optionally, add chapter names to the books. Let's only do it for Alice in Wonderland for now. Open `manifests/lewis-carroll-alice-in-wonderland.yaml` and you'll see it has generic chapter names for now. Set the YAML to:
+```yaml
+title: Alice in Wonderland
+author: Lewis Carroll
+parts:
+- name: ''
+  chapter_names:
+    - Down the Rabbit-Hole
+    - The Pool of Tears
+    - A Caucus-Race and a long Tale
+    - The Rabbit sends in a little Bill
+    - Advice from a Caterpillar
+    - Pig and Pepper
+    - A Mad Tea-Party
+    - The Queen’s Croquet-Ground
+    - The Mock Turtle’s Story
+    - The Lobster Quadrille
+    - Who stole the Tarts?
+    - Alice’s Evidence"
 ```
 
 
@@ -178,7 +165,7 @@ rsync --verbose --delete-after -r --exclude 'media/*' public/ webserver:/var/www
 ```
 
 ### Deleting a book
-You can hide a book my removing the reference to the book in `manifests/index.json` and running `./generate.py` and re-deploying that.
+You can hide a book my removing the reference to the book in `manifests/index.yaml` and running `./generate.py` and re-deploying that.
 
 Note that `generate.py` doesn't delete files from `public/` which were placed there but are no longer needed, meaning the files from a hidden book would still be there. This is a known bug.
 
@@ -195,53 +182,41 @@ If you want the .html files hosted locally, but the media hosted from AWS S3, ca
 
 
 ### Books with Parts / Sections / Acts
-Some books group chapters into Parts, Sections or Acts. This is why there's a `parts` section in the JSON manifests of books. For instance, for Yuval Noah Harari's Sapiens, I use:
-```
-{
-  "title": "Sapiens",
-  "author": "Yuval Noah Harari",
-  "parts": [{
-      "name": "Part 1: The Cognitive Revolution",
-      "chapter_names": ["An Animal of No Significance", "The Tree of Knowledge", "The Flood", "History's Biggest Fraud"
-      ]
-    },
-    {
-      "name": "Part 2: The Agricultural Resolution",
-      "chapter_names": ["History's Biggest Fraud",
-        "Building Pyramids",
-        "Memory Overload",
-        "There is No Justice in History"
-      ]
-    },
-    {
-      "name": "Part 3: The Unification of Humankind",
-      "chapter_names": [
-        "The Arrow of History",
-        "The Scent of Money",
-        "Imperial Visions",
-        "The Law of Religion",
-        "The Secret of Success"
-      ]
-    },
-    {
-      "name": "Part 4: The Scientific Revolution",
-      "chapter_names": [
-        "The Discovery of Ignorance",
-        "The Marriage of Science and Empire",
-        "The Capitalist Creed",
-        "The Wheels of Industry",
-        "A Permanent Revolution",
-        "And They Lived Happily Ever After",
-        "The End of Homo Sapiens"
-      ]
-    },
-    {
-      "name": "Afterword",
-      "chapter_names": [
-        "The Animal that Became a God"
-      ]
-    }
-  ]
-}
+Some books group chapters into Parts, Sections or Acts. This is why there's a `parts` section in the YAML manifests of books. For instance, for Yuval Noah Harari's Sapiens, I use:
+```yaml
+title: Sapiens
+author: Yuval Noah Harari
+parts:
+- name: 'Part 1: The Cognitive Revolution'
+  chapter_names:
+  - An Animal of No Significance
+  - The Tree of Knowledge
+  - The Flood
+  - History's Biggest Fraud
+- name: 'Part 2: The Agricultural Resolution'
+  chapter_names:
+  - History's Biggest Fraud
+  - Building Pyramids
+  - Memory Overload
+  - There is No Justice in History
+- name: 'Part 3: The Unification of Humankind'
+  chapter_names:
+  - The Arrow of History
+  - The Scent of Money
+  - Imperial Visions
+  - The Law of Religion
+  - The Secret of Success
+- name: 'Part 4: The Scientific Revolution'
+  chapter_names:
+  - The Discovery of Ignorance
+  - The Marriage of Science and Empire
+  - The Capitalist Creed
+  - The Wheels of Industry
+  - A Permanent Revolution
+  - And They Lived Happily Ever After
+  - The End of Homo Sapiens
+- name: Afterword
+  chapter_names:
+  - The Animal that Became a God
 ```
 
