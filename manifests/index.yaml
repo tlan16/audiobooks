@@ -3,8 +3,8 @@ sections:
   - name: Fiction
     books:
       - id: bbc-yes-minster-s1
-        source_dir: "/Users/frank.lan/Projects/static-audiobooks/Audiobooks/BBC/Yes Minster S1"
+        source_dir: "Audiobooks/BBC/Yes Minster S1"
       - id: bbc-yes-minster-s2
-        source_dir: "/Users/frank.lan/Projects/static-audiobooks/Audiobooks/BBC/Yes Minster S2"
+        source_dir: "Audiobooks/BBC/Yes Minster S2"
       - id: bbc-yes-minster-s3
-        source_dir: "/Users/frank.lan/Projects/static-audiobooks/Audiobooks/BBC/Yes Minster S3"
+        source_dir: "Audiobooks/BBC/Yes Minster S3"
