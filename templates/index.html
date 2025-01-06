@@ -95,7 +95,7 @@
                 <div class="col-md-2">
                     <a href="{{ book.getID()|urlencode }}{{ extension }}"><img
                             alt="Cover image for {{ book.getTitle()|e }} by {{ book.getAuthor()|e }}"
-                            class="img-fluid cover-image rounded"
+                            class="img-fluid cover-image rounded" loading="lazy"
                             src="{{ media_path }}/{{ book.getID()|urlencode }}/cover.avif"/></a>
                 </div>
                 <div class="col-md-2 author">
