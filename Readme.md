@@ -34,7 +34,7 @@ As for the who can administer this, someone who is OK using python, configuring 
 ## Workflows
 ### Importing audiobooks
 TL/DR;
-1. Have library organised as `…/author/title/{chapter1,chapter2,…}.mp3`
+1. Have library organised as `…/author/title/{chapter1,chapter2,…}.opus`
 2. `./import.py /path/to/library`
 3. Edit `manifests/index.yaml`, to set which books to index, and in what order
 4. Optionally edit the `.yaml` manifest of newly imported books
@@ -55,8 +55,8 @@ The python scripts assume that your library is set up as:
 ├── Lewis Carroll
 │   └── Alice in Wonderland
 │       ├── cover.jpg
-│       ├── foo - chapter 1.mp3
-│       ├── foo - chapter 2.mp3
+│       ├── foo - chapter 1.opus
+│       ├── foo - chapter 2.opus
 …
 ```
 
@@ -64,7 +64,7 @@ Actually the filenames don't matter much. However:
 - The cover image is required
 - The cover image must be a `.jpg`
 - If there are multiple jpg files, the first one alphanumerically will be used
-- Audio files must be `.mp3`
+- Audio files must be `.opus`
 - Audio files must be in alphanumeric order
 
 Let's set up our audiobook library. This is completely separate to this git repository and can be on some home NAS.

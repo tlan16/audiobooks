@@ -1,4 +1,4 @@
-from mutagen.mp3 import MP3
+from mutagen.oggopus import OggOpus
 from os import listdir, makedirs
 from os.path import isfile, join
 from shutil import copyfile
@@ -26,9 +26,9 @@ class Book(object):
 			self.author = self.manifest['author']
 
 			# Get a list of all audio files
-			mp3s = [f for f in listdir(self.source_dir) if isfile(join(self.source_dir, f)) and f.lower().endswith('.mp3')]
-			mp3s.sort()
-			self.media = mp3s
+			opus_files = [f for f in listdir(self.source_dir) if isfile(join(self.source_dir, f)) and f.lower().endswith('.opus')]
+			opus_files.sort()
+			self.media = opus_files
 
 			covers = [f for f in listdir(self.source_dir) if isfile(join(self.source_dir, f)) and f.lower().endswith('.jpg')]
 			# Assume the first one is the cover image
@@ -91,7 +91,7 @@ class Chapter(object):
 	def getDuration(self):
 		if self.duration is not None:
 			return self.duration
-		audio = MP3(self.source)
+		audio = OggOpus(self.source)
 		self.duration = audio.info.length
 		return self.duration
 
