@@ -20,8 +20,14 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Cache pipx packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.local/pipx
+          key: ${{ runner.os }}-pipx-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pipx-
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Generate pages
