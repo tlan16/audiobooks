@@ -16,7 +16,7 @@
     <link onload="this.media='all'" rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
     <link id="favicon" rel="shortcut icon" type="image/jpeg"
-          href="{{ media_path }}/{{ book.getID()|urlencode }}/cover.jpg"/>
+          href="{{ media_path }}/{{ book.getID()|urlencode }}/cover.avif"/>
     <style media="screen">
         #chapter-list .chapter {
             cursor: pointer;
@@ -109,7 +109,7 @@
                 <div class="col-2"></div>
                 <div class="col-10">
                     <img id="book-cover" class="img-fluid border border-info rounded" alt="Cover image"
-                         src="{{ media_path }}/{{ book.getID()|urlencode }}/cover.jpg"/>
+                         src="{{ media_path }}/{{ book.getID()|urlencode }}/cover.avif"/>
                 </div>
             </div>
         </div>

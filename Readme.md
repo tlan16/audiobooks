@@ -9,8 +9,10 @@
 
 This is a fork of https://github.com/sakaru/static-audiobooks, with added features:
 
-1. Uses opus instead of mp3. This provised much smaller file size.
+1. Uses opus instead of mp3. This provides much smaller file size.
 2. Used github action to publish the generated static site. 
+3. Uses CDN for bootstrap.
+4. Uses avif for cover images. This provides much smaller file size.
 
 ### From the end-user's point of view
 A web based audiobook browser and player. There are no accounts, there is no progress sync, there are no cookies (LocalStorage is used to remember progress), it's a straightforward flow of 1) loading a page 2) picking a book and 3) listening.
@@ -62,7 +64,7 @@ The python scripts assume that your library is set up as:
 ```
 ├── Lewis Carroll
 │   └── Alice in Wonderland
-│       ├── cover.jpg
+│       ├── cover.avif
 │       ├── foo - chapter 1.opus
 │       ├── foo - chapter 2.opus
 …
@@ -70,8 +72,8 @@ The python scripts assume that your library is set up as:
 
 Actually the filenames don't matter much. However:
 - The cover image is required
-- The cover image must be a `.jpg`
-- If there are multiple jpg files, the first one alphanumerically will be used
+- The cover image must be a `.avif`
+- If there are multiple avif files, the first one alphanumerically will be used
 - Audio files must be `.opus`
 - Audio files must be in alphanumeric order
 
@@ -97,6 +99,9 @@ Since librivox's zip files doesn't include cover images, let's get some of those
 wget -O "Lewis Carroll/Alice in Wonderland/cover.jpg" https://ia803200.us.archive.org/26/items/alicesadventuresinwonderland_2005_librivox/alicewonderland7_2006.jpg
 wget -O "René Descartes/Discourse on the Method of Rightly Conducting One’s Reason and of Seeking Truth/cover.jpg" https://ia802302.us.archive.org/13/items/discourse_method_librivox/Discourse_on_Method.jpg
 ```
+
+You'll need to convert jpg to avif.
+
 Those aren't the best quality covers, and I would recommend getting better ones, but they'll do for now.
 
 #### Importing our library

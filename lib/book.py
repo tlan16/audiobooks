@@ -30,7 +30,7 @@ class Book(object):
 			opus_files.sort()
 			self.media = opus_files
 
-			covers = [f for f in listdir(self.source_dir) if isfile(join(self.source_dir, f)) and f.lower().endswith('.jpg')]
+			covers = [f for f in listdir(self.source_dir) if isfile(join(self.source_dir, f)) and f.lower().endswith('.avif')]
 			# Assume the first one is the cover image
 			covers.sort()
 			self.cover = covers[0]
@@ -69,7 +69,7 @@ class Book(object):
 
 	def export(self):
 		dst_dir = join('public', 'media', self.getID())
-		dst_cover = join(dst_dir, 'cover.jpg')
+		dst_cover = join(dst_dir, 'cover.avif')
 
 		makedirs(dst_dir, exist_ok=True)
 		if not isfile(dst_cover):
