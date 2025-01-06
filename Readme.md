@@ -4,6 +4,14 @@
 [See a demo](https://audiobooks.franklan.com.au/bbc-yes-minster-s1.html)
 
 ## What is this?
+
+### Upstream project
+
+This is a fork of https://github.com/sakaru/static-audiobooks, with added features:
+
+1. Uses opus instead of mp3. This provised much smaller file size.
+2. Used github action to publish the generated static site. 
+
 ### From the end-user's point of view
 A web based audiobook browser and player. There are no accounts, there is no progress sync, there are no cookies (LocalStorage is used to remember progress), it's a straightforward flow of 1) loading a page 2) picking a book and 3) listening.
 
