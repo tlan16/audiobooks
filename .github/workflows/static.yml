@@ -28,7 +28,7 @@ jobs:
         run: |
           pipx run uv sync
           pipx run uv run ./generate.py --with-extension
-          tree publib
+          tree public
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
