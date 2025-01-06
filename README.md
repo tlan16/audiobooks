@@ -1,7 +1,7 @@
 # Static Site Generator for Audiobooks
 *I don't know how to name projects*
 
-[See a demo](http://static-audiobooks-demo.s3-website-ap-southeast-1.amazonaws.com)
+[See a demo](https://audiobooks.franklan.com.au/bbc-yes-minster-s1.html)
 
 ## What is this?
 ### From the end-user's point of view
@@ -81,6 +81,9 @@ mkdir -vp "René Descartes/Discourse on the Method of Rightly Conducting One’s
 unzip discourse_method_librivox_64kb_mp3.zip -d "René Descartes/Discourse on the Method of Rightly Conducting One’s Reason and of Seeking Truth"
 unzip alicesadventuresinwonderland_2005_librivox_64kb_mp3.zip -d "Lewis Carroll/Alice in Wonderland"
 ```
+
+You'll need to convert the mp3 to opus. 
+
 Since librivox's zip files doesn't include cover images, let's get some of those manually;
 ```bash
 wget -O "Lewis Carroll/Alice in Wonderland/cover.jpg" https://ia803200.us.archive.org/26/items/alicesadventuresinwonderland_2005_librivox/alicewonderland7_2006.jpg
